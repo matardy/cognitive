@@ -3,9 +3,19 @@ FROM python:3.9
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Instalar dependencias
+# Instalar Node.js y npm
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs
+
+# Instalar dependencias de Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+# Copiar y instalar dependencias de npm
+COPY package*.json ./
+RUN npm install
 
 # Copia el resto de tu aplicación y la configuración de Alembic al contenedor
 COPY . .

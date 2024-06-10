@@ -162,3 +162,5 @@ cython_debug/
 # Vector databases and index docs
 chroma/ 
 docs/
+
+node_modules/

@@ -11,7 +11,7 @@ class UserRepository:
     async def create_user(self, user_create: UserCreate):
         # Verifica si el usuario ya existe en la base de datos
         stmt = select(User).filter(User.user_id == user_create.user_id)
-        result = await self.db.execute(stmt)
+        result = self.db.execute(stmt)
         existing_user = result.scalars().first()
         
         if existing_user:
@@ -21,7 +21,7 @@ class UserRepository:
         # Si el usuario no existe, crea uno nuevo
         user = User(user_id=user_create.user_id)
         self.db.add(user)
-        await self.db.commit()
-        await self.db.refresh(user)
+        self.db.commit()
+        self.db.refresh(user)
         print(f"Created User: {user}")
         return user

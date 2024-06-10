@@ -9,6 +9,6 @@ class MessageRepository:
     async def create_message(self, content: str, role: str, conversation_id: int) -> Message:
         message = Message(content=content, role=role, conversation_id=conversation_id)
         self.db.add(message)
-        await self.db.commit()
-        await self.db.refresh(message)
+        self.db.commit()
+        self.db.refresh(message)
         return message

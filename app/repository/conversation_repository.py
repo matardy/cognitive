@@ -11,19 +11,19 @@ class ConversationRepository:
 
     async def create_conversation(self, user_id: str) -> Conversation:
         # Verificar si el usuario existe
-        result = await self.db.execute(select(User).filter(User.user_id == user_id))
+        result = self.db.execute(select(User).filter(User.user_id == user_id))
         user = result.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User does not exist")
         
         conversation = Conversation(user_id=user_id)
         self.db.add(conversation)
-        await self.db.commit()
-        await self.db.refresh(conversation)
+        self.db.commit()
+        self.db.refresh(conversation)
         return conversation
     
     async def get_conversation_by_id(self, conversation_id: int) -> Conversation:
-        result = await self.db.execute(
+        result = self.db.execute(
             select(Conversation)
             .options(selectinload(Conversation.messages))
             .filter(Conversation.id == conversation_id)

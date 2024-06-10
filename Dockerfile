@@ -6,19 +6,24 @@ WORKDIR /app
 # Instalar Node.js y npm
 RUN apt-get update && apt-get install -y nodejs npm
 
-# Instalar dependencias de Python
+# Copiar archivos de configuración antes para aprovechar la caché de Docker
 COPY requirements.txt .
+COPY package*.json ./
+
+# Instalar dependencias de Python
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Copiar y instalar dependencias de npm
-COPY package*.json ./
+# Instalar dependencias de npm
 RUN npm install
 
-# Copia el resto de tu aplicación y la configuración de Alembic al contenedor
+# Copiar el resto de la aplicación al contenedor
 COPY . .
 
 # Establecer PYTHONPATH para incluir el directorio /app
 ENV PYTHONPATH=/app/app
+
+# Ejecutar las migraciones de Alembic antes de iniciar la aplicación
+RUN alembic upgrade head
 
 # Copia el script de entrada y configúralo como el punto de entrada
 COPY entrypoint.sh /entrypoint.sh

@@ -37,6 +37,8 @@ services:
       - 172.31.0.2   # VPC's DNS server
       - 8.8.8.8      # Google's public DNS
       - 8.8.4.4      # Secondary Google DNS
+    networks:
+      - default
     # depends_on:
     #   mysql:
     #     condition: service_healthy

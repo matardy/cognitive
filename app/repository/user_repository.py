@@ -3,9 +3,9 @@ from models.user import User
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from schemas.user import UserCreate
-
+from sqlalchemy.orm import selectinload, Session
 class UserRepository:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db 
     
     async def create_user(self, user_create: UserCreate):

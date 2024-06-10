@@ -20,10 +20,10 @@ async_engine = create_async_engine(ASYNC_DATABASE_URL, echo=True)
 sync_engine = create_engine(SYNC_DATABASE_URL, echo=True)
 
 # Asynchronous session
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession)
+SessionLocal = sessionmaker(bind=sync_engine)
 
 # Dependency
-async def get_db():
-    async with SessionLocal() as session:
+def get_db():
+    with SessionLocal() as session:
         yield session
 

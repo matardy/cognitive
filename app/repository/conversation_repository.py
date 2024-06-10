@@ -3,10 +3,10 @@ from sqlalchemy.future import select
 from models.conversation import Conversation
 from models.user import User
 from fastapi import HTTPException, status
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, Session
 
 class ConversationRepository:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db 
 
     async def create_conversation(self, user_id: str) -> Conversation:

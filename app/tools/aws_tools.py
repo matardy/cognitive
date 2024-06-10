@@ -38,5 +38,5 @@ def publicar_mensaje(subject, message, topic_arn=TOPIC_ARN):
 if __name__ == "__main__":
     subject = 'python test'
     message = 'this is a test from a python script'
-    #publish_message(subject=subject, message=message)
-    publicar_mensaje(subject=subject, message=message)
+    publish_message(subject=subject, message=message)
+    #publicar_mensaje(subject=subject, message=message)

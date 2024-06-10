@@ -2,11 +2,15 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 # Asynchronous database URL
-ASYNC_DATABASE_URL = "mysql+aiomysql://user:password@mysql/brainai"
+ASYNC_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 # Synchronous database URL for Alembic
-SYNC_DATABASE_URL = "mysql+pymysql://user:password@mysql/brainai"
+SYNC_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 Base = declarative_base()
 # Asynchronous engine

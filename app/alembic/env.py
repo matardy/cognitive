@@ -1,11 +1,13 @@
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from models import Base
 from models import user, message, conversation
 from core.database import SYNC_DATABASE_URL
 from sqlalchemy import create_engine
 from alembic import context
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,6 +20,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+from models import Base
+sqlalchemy_url = os.getenv("SQLALCHEMY_DATABASE_URI")
+config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 # Set up the synchronous SQLAlchemy engine
 def get_sync_engine():
     return create_engine(SYNC_DATABASE_URL, echo=True)

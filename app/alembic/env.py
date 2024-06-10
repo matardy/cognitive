@@ -2,7 +2,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from models import user, message, conversation
-from core.database import SYNC_DATABASE_URL, async_engine
+from core.database import SYNC_DATABASE_URL
 from sqlalchemy import create_engine
 from alembic import context
 import os

@@ -1,12 +1,14 @@
 import boto3 
 from dotenv import load_dotenv
 import os 
+from botocore import UNSIGNED
+from botocore.client import Config
 load_dotenv()
 
 TOPIC_ARN = os.getenv('TOPIC_ARN') 
 
 def publish_message(subject, message):
-    sns_client = boto3.client('sns', region_name = 'us-east-1')
+    sns_client = boto3.client('sns', config=Config(signature_version=UNSIGNED), region_name = 'us-east-1')
 
     response = sns_client.publish(
         TopicArn = TOPIC_ARN,

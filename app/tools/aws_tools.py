@@ -21,6 +21,20 @@ def publish_message(subject, message):
     print("Message Published succesfully")
     return response
 
+def publicar_mensaje_request(topic_arn, subject, message):
+    url = "https://sns.us-east-1.amazonaws.com/"
+    data = {
+        "Action": "Publish",
+        "TopicArn": topic_arn,
+        "Message": message,
+        "Subject": subject,
+        "Version": "2010-03-31"
+    }
+    response = requests.post(url, data=data)
+    if response.status_code == 200:
+        print('Mensaje publicado:', response.text)
+    else:
+        print('Error al publicar mensaje:', response.text)
 
 def publicar_mensaje(topic_arn, subject, message, region_name):
     # Create the SNS resource with unsigned configuration
@@ -45,4 +59,5 @@ if __name__ == "__main__":
     subject = 'python test'
     message = 'this is a test from a python script'
     #publish_message(subject=subject, message=message)
-    publicar_mensaje(topic_arn=TOPIC_ARN, subject=subject, message=message, region_name='us-east-1')
+    #publicar_mensaje(topic_arn=TOPIC_ARN, subject=subject, message=message, region_name='us-east-1')
+    publicar_mensaje_request(topic_arn=TOPIC_ARN, subject=subject, message=message)

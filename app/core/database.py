@@ -6,15 +6,12 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# Asynchronous database URL
-ASYNC_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 # Synchronous database URL for Alembic
 SYNC_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 Base = declarative_base()
 # Asynchronous engine
-async_engine = create_async_engine(ASYNC_DATABASE_URL, echo=True)
 
 # Synchronous engine for Alembic
 sync_engine = create_engine(SYNC_DATABASE_URL, echo=True)

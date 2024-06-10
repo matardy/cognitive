@@ -21,8 +21,8 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 from models import Base
-#sqlalchemy_url = os.getenv("SQLALCHEMY_DATABASE_URI")
-#config.set_main_option("sqlalchemy.url", sqlalchemy_url)
+sqlalchemy_url = os.getenv("SQLALCHEMY_DATABASE_URI")
+config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 # Set up the synchronous SQLAlchemy engine
 def get_sync_engine():
     return create_engine(SYNC_DATABASE_URL, echo=True)

@@ -1,23 +1,23 @@
 version: '3.8'
 services:
-  mysql:
-    image: mysql:8.0.32
-    platform: linux/x86_64 # Only for Macs (m1,m2)
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "brainai"
-      MYSQL_USER: "user"
-      MYSQL_PASSWORD: "password"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - default
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+  # mysql:
+  #   image: mysql:8.0.32
+  #   platform: linux/x86_64 # Only for Macs (m1,m2)
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: "root"
+  #     MYSQL_DATABASE: "brainai"
+  #     MYSQL_USER: "user"
+  #     MYSQL_PASSWORD: "password"
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #   networks:
+  #     - default
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     timeout: 20s
+  #     retries: 10
 
   redis:
     image: "redis:alpine"
@@ -33,21 +33,21 @@ services:
       - .env
     volumes:
       - ./app:/app
-    # dns:
-    #   - 172.31.0.2   # VPC's DNS server
-    #   - 8.8.8.8      # Google's public DNS
-    #   - 8.8.4.4      # Secondary Google DNS
+    dns:
+      - 172.31.0.2   # VPC's DNS server
+      - 8.8.8.8      # Google's public DNS
+      - 8.8.4.4      # Secondary Google DNS
     networks:
       - default
-    depends_on:
-      mysql:
-        condition: service_healthy
+    # depends_on:
+    #   mysql:
+    #     condition: service_healthy
 
 volumes:
   redis_data:
-  mysql-data:
+#  mysql-data:
 
-networks:
-  default:
-    external:
-      name: shared_network
+# networks:
+#   default:
+#     external:
+#       name: shared_network

@@ -26,3 +26,4 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=async_engine
 async def get_db():
     async with SessionLocal() as session:
         yield session
+

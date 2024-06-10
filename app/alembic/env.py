@@ -2,10 +2,11 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from models import user, message, conversation
-from core.database import SYNC_DATABASE_URL
+from core.database import SYNC_DATABASE_URL, async_engine
 from sqlalchemy import create_engine
 from alembic import context
 import os
+import asyncio
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -23,9 +24,6 @@ if config.config_file_name is not None:
 from models import Base
 sqlalchemy_url = os.getenv("SQLALCHEMY_DATABASE_URI")
 config.set_main_option("sqlalchemy.url", sqlalchemy_url)
-# Set up the synchronous SQLAlchemy engine
-def get_sync_engine():
-    return create_engine(SYNC_DATABASE_URL, echo=True)
 
 target_metadata = Base.metadata
 
@@ -35,7 +33,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 
-def run_migrations_offline() -> None:
+async def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
     This configures the context with just a URL
@@ -59,7 +57,7 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-def run_migrations_online() -> None:
+async def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
     In this scenario we need to create an Engine
@@ -80,8 +78,11 @@ def run_migrations_online() -> None:
         with context.begin_transaction():
             context.run_migrations()
 
+async def main():
+    if context.is_offline_mode():
+        raise NotImplementedError("Offline mode not supported with async engine.")
+    else:
+        run_migrations_online()
 
-if context.is_offline_mode():
-    run_migrations_offline()
-else:
-    run_migrations_online()
+if __name__ == '__main__':
+    asyncio.run(main())

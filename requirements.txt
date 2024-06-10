@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+langchain
+langchain-openai
+openai
+python-dotenv
+redis
+langsmith
+langchainhub
+sqlalchemy[asyncio]
+databases
+alembic
+aiomysql
+pymysql
+cryptography
+langchain_community

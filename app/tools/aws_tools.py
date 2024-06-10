@@ -59,6 +59,7 @@ def publicar_mensaje(topic_arn, subject, message, region_name):
 def ejecutar_script_js(subject, message, topic_arn=TOPIC_ARN,):
     try:
         script_path = os.path.join(os.path.dirname(__file__), 'js', 'publish.js')
+        print(os.path.dirname(__file__))
         # Ejecutar el script de JavaScript usando Node.js con argumentos
         result = subprocess.run(['node', script_path, topic_arn, subject, message], capture_output=True, text=True)
         

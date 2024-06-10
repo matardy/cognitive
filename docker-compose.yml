@@ -33,6 +33,8 @@ services:
       - .env
     volumes:
       - ./app:/app
+    dns:
+      - 172.31.0.2
     # depends_on:
     #   mysql:
     #     condition: service_healthy

@@ -15,6 +15,7 @@ from tools.bg_gateway import (
     SegurosTool
 )
 from tools.notifications import NotificationTool
+from tools.bucket_s3 import S3Tool
 from cache.message_history import get_memory_runnable
 from langsmith import traceable
 from langsmith import Client
@@ -44,8 +45,9 @@ class ChatUserAgent:
 
         # Add tool to the agent
         notification_tool = NotificationTool()
+        s3_tool = S3Tool()
         
-        tools = [notification_tool]
+        tools = [notification_tool, s3_tool]
 
         agent = create_react_agent(
             llm=chat_model,

@@ -1,35 +1,50 @@
-import boto3 
-from dotenv import load_dotenv
-import os 
+import boto3
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from botocore import UNSIGNED
 from botocore.client import Config
-import requests
-from botocore.handlers import disable_signing
-import subprocess
-load_dotenv()
 
-TOPIC_ARN = os.getenv('TOPIC_ARN') 
+# Inicializa el cliente de S3
+s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED), region_name='us-east-1')  # Cambia la región según necesites
 
-
-def ejecutar_script_js(subject, message, topic_arn=TOPIC_ARN):
+def list_bucket_contents(bucket_name):
     try:
-        script_path = os.path.join(os.path.dirname(__file__), 'js', 'publish.js')
-        print(os.path.dirname(__file__))
-        print(script_path)
-        # Ejecutar el script de JavaScript usando Node.js con argumentos
-        result = subprocess.run(['node', script_path, topic_arn, subject, message], capture_output=True, text=True)
-        
-        # Verificar la salida
-        if result.returncode == 0:
-            print('Script ejecutado correctamente')
-            print('Salida:', result.stdout)
-        else:
-            print('Error al ejecutar el script')
-            print('Error:', result.stderr)
+        response = s3.list_objects_v2(Bucket=bucket_name)
+        for item in response.get('Contents', []):
+            print(f'Key: {item["Key"]}, Last Modified: {item["LastModified"]}, Size: {item["Size"]}')
     except Exception as e:
-        print(f'Ocurrió un error: {e}')
+        print(f"Error listing bucket contents: {e}")
 
-if __name__ == "__main__":
-    subject = 'python test'
-    message = 'this is a test from a python script'
-    ejecutar_script_js(subject=subject, message=message)
+def get_object_text(bucket_name, object_key):
+    try:
+        response = s3.get_object(Bucket=bucket_name, Key=object_key)
+        return response['Body'].read().decode('utf-8')
+    except Exception as e:
+        print(f"Error retrieving object text: {e}")
+
+def upload_file_to_bucket(bucket_name, file_path, object_name):
+    try:
+        with open(file_path, 'rb') as file:
+            s3.put_object(Bucket=bucket_name, Key=object_name, Body=file)
+        print(f'File {file_path} uploaded to {bucket_name} as {object_name}')
+    except FileNotFoundError:
+        print("The file was not found")
+    except NoCredentialsError:
+        print("Credentials not available")
+    except PartialCredentialsError:
+        print("Incomplete credentials")
+    except Exception as e:
+        print(f"Error uploading file: {e}")
+
+# Uso de las funciones
+bucket_name = 'cognitive-ai-bucket'  # Asegúrate de usar el nombre correcto de tu bucket
+
+# Listar contenido
+list_bucket_contents(bucket_name)
+
+# # Obtener texto de un objeto específico
+object_key = 'test.txt'  # Cambia esto por la clave real del objeto en tu bucket
+print(get_object_text(bucket_name, object_key))
+
+# # Subir un nuevo archivo
+# file_path = 'path/to/your/file.txt'  # Ruta al archivo que quieres subir
+# upload_file_to_bucket(bucket_name, file_path, 'new-file-name.txt')  # Nombre bajo el cual el archivo se guardará en el bucket

@@ -44,7 +44,7 @@ class NotificationTool(BaseTool):
                 return f'Error executing script: {result.stderr}'
         except ValidationError as ve:
             print(f'Validation error: {ve}')
-            return f'Validation error: {ve}'
+            return f'Validation error: {ve}, the data is {tool_input}'
         except json.JSONDecodeError as jde:
             print(f'JSON decode error: {jde}')
             return f'JSON decode error: {jde}'

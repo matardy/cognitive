@@ -22,12 +22,18 @@ class NotificationTool(BaseTool):
     description = "Sends a notification email with a specified subject and message using a Node.js script."
     args_schema: Type[BaseModel] = NotificationInput
 
-    def _run(self, tool_input: Dict[str, Any], run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
+    def _run(self, tool_input: Any, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
         try:
+            # Log the received input
+            print(f"Received tool_input: {tool_input}")
+
             # Ensure tool_input is parsed into the NotificationInput schema
             if isinstance(tool_input, str):
+                print("Parsing tool_input from JSON string")
                 tool_input = json.loads(tool_input)
             
+            print(f"Parsed tool_input: {tool_input}")
+
             input_data = NotificationInput(**tool_input)
             subject = input_data.subject
             message = input_data.message
@@ -39,11 +45,14 @@ class NotificationTool(BaseTool):
             else:
                 return f'Error executing script: {result.stderr}'
         except ValidationError as ve:
+            print(f'Validation error: {ve}')
             return f'Validation error: {ve}'
         except json.JSONDecodeError as jde:
+            print(f'JSON decode error: {jde}')
             return f'JSON decode error: {jde}'
         except Exception as e:
+            print(f'An error occurred: {e}')
             return f'An error occurred: {e}'
 
-    async def _arun(self, tool_input: Dict[str, Any], run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
+    async def _arun(self, tool_input: Any, run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
         raise NotImplementedError("Asynchronous operation not supported.")

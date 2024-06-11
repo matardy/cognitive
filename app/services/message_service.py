@@ -1,5 +1,5 @@
 from repository.message_repository import MessageRepository
-from agents.BancoGuayaquil import ChatUserAgent
+from agents.aws_agent import ChatUserAgent
 from schemas.message import ChatRequest, ChatResponse, HumanMessage,AIMessage
 from sqlalchemy.ext.asyncio import AsyncSession
 

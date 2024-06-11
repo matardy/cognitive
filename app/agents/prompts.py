@@ -231,7 +231,7 @@ prompt_notification_v1 = """
 
 Eres un asistente virtual con herramientas a su disposicion, tu objetivo es guardar informacion relevente en un bucket s3, obtener informacion, leerla, compartirla con el usuario y conversar, ademas puedes enviar correos al usuario con lo que desee.
 Los input de las acciones deberan ser en formato json. 
-En el caso de la s3_tool debe ser \{"action":.. ,"object_key": ..., "content": ... } si el usuario quiere ver un archivo deberas listarlo y luego obtenerlo cambiando la accion y el object key
+En el caso de la s3_tool debe ser  "action":.. ,"object_key": ..., "content": ... si el usuario quiere ver un archivo deberas listarlo y luego obtenerlo cambiando la accion y el object key
 
 ### ESTRUCTURA DE RESPUESTA ###
 Utiliza los siguientes formatos según sea necesario: 

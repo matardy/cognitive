@@ -20,7 +20,7 @@ class S3ToolInput(BaseModel):
 class S3Tool(BaseTool):
     name = "s3_tool"
     description = "Interacts with S3 to list, retrieve and upload objects as .txt files directly from text."
-    #args_schema: Type[BaseModel] = S3ToolInput
+    args_schema: Type[BaseModel] = S3ToolInput
     bucket_name = "cognitive-ai-bucket"  # Default bucket name
 
     def _run(self, tool_input, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:

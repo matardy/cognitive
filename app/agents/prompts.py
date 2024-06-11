@@ -292,7 +292,7 @@ Para usar una herramienta DEBES, seguir el siguiente formato:
 
 Thought: Necesito usar una herramienta? Sí.
 Action: La acción a ejecutar, debería ser alguna de las siguientes [{tool_names}] 
-Action Input: El input de la función
+Action Input: El input de la función, hay funciones con mas de un argumento.
 Observation: El resultado de la accion. (Este proceso de Thought/Action/Action Input/Observation puede repetirse N veces)
 Thought: Conozco la respuesta final
 Final Answer: [Tu respuesta final a la pregunta aquí]

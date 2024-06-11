@@ -1,5 +1,8 @@
+"""Notification Microservice Connection"""
+
 from langchain.tools import BaseTool
-from typing import Optional, Type
+from typing import Optional, Type, Dict, Any
+from langchain.callbacks.manager import CallbackManagerForToolRun, AsyncCallbackManagerForToolRun
 from pydantic import BaseModel, Field, ValidationError
 import os
 import subprocess

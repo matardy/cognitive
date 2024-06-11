@@ -3,10 +3,11 @@
 from langchain.tools import BaseTool
 from typing import Optional, Type, Dict, Any
 from langchain.callbacks.manager import CallbackManagerForToolRun, AsyncCallbackManagerForToolRun
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 import os
 import subprocess
 from dotenv import load_dotenv
+import json
 
 # Load environment variables
 load_dotenv()
@@ -24,6 +25,9 @@ class NotificationTool(BaseTool):
     def _run(self, tool_input: Dict[str, Any], run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
         try:
             # Ensure tool_input is parsed into the NotificationInput schema
+            if isinstance(tool_input, str):
+                tool_input = json.loads(tool_input)
+            
             input_data = NotificationInput(**tool_input)
             subject = input_data.subject
             message = input_data.message
@@ -34,6 +38,10 @@ class NotificationTool(BaseTool):
                 return f'Script executed successfully: {result.stdout}'
             else:
                 return f'Error executing script: {result.stderr}'
+        except ValidationError as ve:
+            return f'Validation error: {ve}'
+        except json.JSONDecodeError as jde:
+            return f'JSON decode error: {jde}'
         except Exception as e:
             return f'An error occurred: {e}'
 

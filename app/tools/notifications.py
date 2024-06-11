@@ -17,9 +17,8 @@ class NotificationInput(BaseModel):
 class NotificationTool(BaseTool):
     name = "notification"
     description = "Sends a notification email with a specified subject and message using a Node.js script."
-    args_schema: Type[BaseModel] = NotificationInput
 
-    def _run(self, tool_input: str, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
+    def _run(self, tool_input, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
         try:
             # Log the received input
             print(f"Received tool_input: {tool_input}")

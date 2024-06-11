@@ -1,8 +1,5 @@
-"""Notification Microservice Connection"""
-
 from langchain.tools import BaseTool
-from typing import Optional, Type, Dict, Any
-from langchain.callbacks.manager import CallbackManagerForToolRun, AsyncCallbackManagerForToolRun
+from typing import Optional, Type
 from pydantic import BaseModel, Field, ValidationError
 import os
 import subprocess
@@ -27,30 +24,34 @@ class NotificationTool(BaseTool):
             # Log the received input
             print(f"Received tool_input: {tool_input}")
 
-            # Parse the JSON string into a dictionary
-            tool_input_dict = json.loads(tool_input)
-            print(f"Parsed tool_input_dict: {tool_input_dict}")
+            # Attempt to parse the JSON string into a dictionary
+            try:
+                tool_input_dict = json.loads(tool_input)
+                print(f"Parsed tool_input_dict: {tool_input_dict}")
+            except json.JSONDecodeError as jde:
+                return f"JSON decode error: {jde}"
 
-            # Ensure tool_input_dict is parsed into the NotificationInput schema
-            input_data = NotificationInput(**tool_input_dict)
+            # Validate the parsed dictionary using the NotificationInput schema
+            try:
+                input_data = NotificationInput(**tool_input_dict)
+            except ValidationError as ve:
+                return f"Validation error: {ve}"
+
             subject = input_data.subject
             message = input_data.message
+
+            # Construct the path to the Node.js script
             script_path = os.path.join(os.path.dirname(__file__), 'js', 'publish.js')
+
+            # Execute the Node.js script with the necessary arguments
             result = subprocess.run(['node', script_path, TOPIC_ARN, subject, message], capture_output=True, text=True)
             
             if result.returncode == 0:
-                return f'Script executed successfully: {result.stdout}'
+                return f"Script executed successfully: {result.stdout}"
             else:
-                return f'Error executing script: {result.stderr}'
-        except ValidationError as ve:
-            print(f'Validation error: {ve}')
-            return f'Validation error: {ve}, the data is {tool_input}'
-        except json.JSONDecodeError as jde:
-            print(f'JSON decode error: {jde}')
-            return f'JSON decode error: {jde}'
+                return f"Error executing script: {result.stderr}"
         except Exception as e:
-            print(f'An error occurred: {e}')
-            return f'An error occurred: {e}'
+            return f"An unexpected error occurred: {e}"
 
     async def _arun(self, tool_input: str, run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
         raise NotImplementedError("Asynchronous operation not supported.")

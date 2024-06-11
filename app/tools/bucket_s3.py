@@ -7,10 +7,11 @@ import json
 import os
 from io import BytesIO
 from botocore.client import Config
+from botocore import UNSIGNED
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 # Configuración de Boto3 para acceso sin firmar
-s3 = boto3.client('s3', config=Config(signature_version='UNSIGNED'), region_name='us-east-1')
+s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED), region_name='us-east-1')
 
 class S3ToolInput(BaseModel):
     action: str = Field(description="Action to perform: list, get, or put")

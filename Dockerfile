@@ -10,9 +10,8 @@ RUN apt-get update && apt-get install -y nodejs npm
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Copiar y instalar dependencias de npm
-COPY package*.json ./
-RUN npm install
+# Instalar aws-sdk directamente usando npm
+RUN npm install aws-sdk
 
 # Copia el resto de tu aplicación y la configuración de Alembic al contenedor
 COPY . .

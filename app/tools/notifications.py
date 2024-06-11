@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 import os
 import subprocess
 from dotenv import load_dotenv
-
+asdasdasd
 # Load environment variables
 load_dotenv()
 TOPIC_ARN = os.getenv('TOPIC_ARN')

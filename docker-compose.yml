@@ -1,4 +1,5 @@
 version: '3.8'
+# The commented code is for local env development.
 services:
   # mysql:
   #   image: mysql:8.0.32

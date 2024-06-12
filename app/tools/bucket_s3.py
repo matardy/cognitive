@@ -10,8 +10,13 @@ from botocore.client import Config
 from botocore import UNSIGNED
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
+from dotenv import load_dotenv
+load_dotenv()
+BUCKET_S3 = os.getenv('BUCKET_S3')
+AWS_REGION = os.getenv('AWS_REGION')
+
 # Configuración de Boto3 para acceso sin firmar
-s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED), region_name='us-east-1')
+s3 = boto3.client('s3', config=Config(signature_version=UNSIGNED), region_name=AWS_REGION)
 
 class S3ToolInput(BaseModel):
     action: str = Field(description="Action to perform: list, get, or put")
@@ -22,7 +27,7 @@ class S3Tool(BaseTool):
     name = "s3_tool"
     description = "Interacts with S3 to list, retrieve and upload objects as .txt files directly from text."
     args_schema: Type[BaseModel] = S3ToolInput
-    bucket_name = "cognitive-ai-bucket"  # Default bucket name
+    bucket_name = BUCKET_S3  # Default bucket name
 
     def _run(self, tool_input, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
         try:

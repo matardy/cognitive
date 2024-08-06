@@ -4,7 +4,11 @@ from models.conversation import Conversation
 from models.user import User
 from fastapi import HTTPException, status
 from sqlalchemy.orm import selectinload, Session
+from utils.utils import decrypt_message
+import os
+from dotenv import load_dotenv
 
+SECRET_DB_KEY = os.getenv('SECRET_DB_KEY')
 class ConversationRepository:
     def __init__(self, db: Session):
         self.db = db 
@@ -36,5 +40,6 @@ class ConversationRepository:
         for message in conversation.messages:
             if message.content is None:
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Message content is missing")
+            message.content = decrypt_message(message.content,SECRET_DB_KEY)
         
         return conversation

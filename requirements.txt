@@ -15,3 +15,4 @@ pymysql
 cryptography
 langchain_community
 boto3
+cryptography
